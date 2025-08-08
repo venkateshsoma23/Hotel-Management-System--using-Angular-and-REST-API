@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hotel Management System</title>
+  <link rel="icon" href="data:;base64,=">
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
+    padding: 20px;
+    color: white;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: auto;
+    background-color: #fdfdfd;
+    color: #333;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+
+  h1, h2 {
+    text-align: center;
+    color: #333;
+  }
+
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: 25px;
+  }
+
+  .menu div {
+    padding: 12px 24px;
+    background-color: #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin: 5px;
+  }
+
+  .menu div:hover, .menu div.active {
+    background-color: #ccc;
+    font-weight: bold;
+  }
+
+  form label {
+    display: block;
+    margin: 10px 0 5px;
+  }
+
+  form input, form select, form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+
+  form button {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  form button:hover {
+    background-color: #45a049;
+  }
+
+  .section {
+    display: none;
+    margin-top: 20px;
+  }
+
+  .message {
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+
+  .success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .error {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .booking-card {
+    border: 1px solid #ccc;
+    background-color: #f7f7f7;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  }
+
+  .booking-card strong {
+    font-size: 1.1rem;
+    color: #222;
+  }
+
+  .availability-box {
+    margin-top: 10px;
+    padding: 12px;
+    background-color: #e7f3fe;
+    color: #0c5460;
+    border-left: 5px solid #17a2b8;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  button {
+    padding: 10px 16px;
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+</style>
+
+</head>
+<body>
+  <div class="container">
+    <h1>Hotel Management System</h1>
+    <p style="text-align: center">Book rooms, view bookings, check availability</p>
+
+    <div class="menu">
+      <div onclick="showSection('book')" id="menuBook">Book Room</div>
+      <div onclick="showSection('view')" id="menuView">View Bookings</div>
+      <div onclick="showSection('availability')" id="menuAvailability">Room Availability</div>
+      <div onclick="resetAll()">Reset</div>
+    </div>
+
+    <div id="messageContainer"></div>
+
+    <!-- Book Room Section -->
+    <div class="section" id="section-book">
+      <h2>Book Room</h2>
+      <form id="bookForm">
+        <label for="customerName">Customer Name</label>
+        <input type="text" id="customerName" required>
+
+        <label for="contact">Contact Number</label>
+        <input type="tel" id="contact" required>
+
+        <label for="roomCount">Number of Rooms</label>
+        <input type="number" id="roomCount" min="1" required>
+
+        <label for="roomType">Room Type</label>
+        <select id="roomType" required>
+          <option value="">Select</option>
+          <option value="AC">AC</option>
+          <option value="Non-AC">Non-AC</option>
+        </select>
+
+        <button type="submit">Book Room</button>
+      </form>
+    </div>
+
+    <!-- View Bookings Section -->
+    <div class="section" id="section-view">
+      <h2>All Bookings</h2>
+      <div>
+        <button onclick="loadBookings()">Load Bookings</button>
+        <button onclick="clearBookings()">Clear</button>
+      </div>
+      <div id="bookingsList"></div>
+    </div>
+
+    <!-- Room Availability Section -->
+ <div id="section-availability" class="section">
+  <h2>Room Availability</h2>
+  <button onclick="checkAvailability('AC')">Check AC</button>
+  <div id="acAvailability" class="availability-box"></div>
+  <button onclick="checkAvailability('Non-AC')">Check Non-AC</button>
+  <div id="nonAcAvailability" class="availability-box"></div>
+</div>
+
+
+  <script>
+    const API = 'http://localhost:8080/api/hotel_db';
+
+    function showMessage(msg, type = 'success') {
+      const container = document.getElementById('messageContainer');
+      container.innerHTML = `<div class="message ${type}">${msg}</div>`;
+      setTimeout(() => container.innerHTML = '', 3000);
+    }
+
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+      document.querySelectorAll('.menu div').forEach(m => m.classList.remove('active'));
+      document.getElementById(`section-${id}`).style.display = 'block';
+      document.getElementById(`menu${id.charAt(0).toUpperCase() + id.slice(1)}`).classList.add('active');
+    }
+
+    function resetAll() {
+      document.getElementById('bookForm').reset();
+      showSection('book');
+    }
+
+    document.getElementById('bookForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const data = {
+        customerName: document.getElementById('customerName').value,
+        contact: document.getElementById('contact').value,
+        count: parseInt(document.getElementById('roomCount').value),
+        roomType: document.getElementById('roomType').value
+      };
+
+      try {
+        const res = await fetch(`${API}/bookings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const result = await res.json();
+        showMessage('Booking successful', 'success');
+        document.getElementById('bookForm').reset();
+        checkAvailability('AC');
+        checkAvailability('Non-AC');
+      } catch (err) {
+        showMessage('Booking failed: ' + err.message, 'error');
+      }
+    });
+
+    async function loadBookings() {
+      try {
+        const res = await fetch(`${API}/bookings`);
+        const bookings = await res.json();
+        const container = document.getElementById('bookingsList');
+        container.innerHTML = '';
+        if (bookings.length === 0) {
+          container.innerHTML = '<p>No bookings available</p>';
+        }
+        bookings.forEach(b => {
+          const div = document.createElement('div');
+          div.className = 'booking-card';
+          div.innerHTML = `
+            <strong>${b.customerName}</strong><br>
+            Contact: ${b.contact}<br>
+            Room Type: ${b.roomType}<br>
+            Count: ${b.count}<br>
+            Rooms: ${b.bookedRooms?.join(', ') || 'N/A'}<br>
+            Time: ${b.timestamp ? new Date(b.timestamp).toLocaleString() : 'N/A'}<br>
+            <button onclick="deleteBooking(${b.id})">Delete</button>
+          `;
+          container.appendChild(div);
+        });
+      } catch (err) {
+        showMessage('Failed to load bookings', 'error');
+      }
+    }
+
+    function clearBookings() {
+      document.getElementById('bookingsList').innerHTML = '';
+    }
+
+    async function checkAvailability(type) {
+      try {
+        const res = await fetch(`${API}/rooms/availability?type=${type}`);
+        const data = await res.json();
+        const el = type === 'AC' ? 'acAvailability' : 'nonAcAvailability';
+        document.getElementById(el).innerText = `${data.available} of ${data.total} rooms available.`;
+      } catch (err) {
+        showMessage('Error checking availability', 'error');
+      }
+    }
+
+    async function deleteBooking(id) {
+      if (!confirm('Are you sure you want to delete this booking?')) return;
+      try {
+        const res = await fetch(`${API}/bookings?id=${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Failed to delete booking');
+        showMessage('Booking deleted', 'success');
+        loadBookings();
+        checkAvailability('AC');
+        checkAvailability('Non-AC');
+      } catch (err) {
+        showMessage('Error deleting booking', 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      showSection('book');
+      checkAvailability('AC');
+      checkAvailability('Non-AC');
+    });
+  </script>
+</body>
+</html>
