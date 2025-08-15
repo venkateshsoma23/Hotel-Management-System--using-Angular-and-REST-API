@@ -68,7 +68,11 @@ server.port=8080
 
 ---
 
+<<<<<<< HEAD
 ## Prerequisites
+=======
+# PREREQUISITES
+>>>>>>> 87e0fb1b69910f7cd18c44f52eaae5a63732e524
 
 - Java 17+
 - Maven
@@ -77,7 +81,13 @@ server.port=8080
 
 ---
 
+<<<<<<< HEAD
 ## Database setup (PostgreSQL)
+=======
+# DATABASE SETUP
+
+Create a PostgreSQL database named `hotel_db`:
+>>>>>>> 87e0fb1b69910f7cd18c44f52eaae5a63732e524
 
 ```sql
 CREATE DATABASE hotel_db;
@@ -159,4 +169,16 @@ ng serve --open
 
 ## Screenshot
 
+<<<<<<< HEAD
 ![](Hotel.png)
+=======
+- **Developer:** *Venkatesh Soma*
+- **Email:** venkateshsoma2305@gmail.com
+- **GitHub:** *venkatesh-soma* 
+
+---
+
+# SCREENSHOT
+
+![](Hotel.png) 
+>>>>>>> 87e0fb1b69910f7cd18c44f52eaae5a63732e524
