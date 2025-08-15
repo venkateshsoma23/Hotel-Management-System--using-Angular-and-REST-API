@@ -1,8 +1,9 @@
 # HOTEL MANAGEMENT SYSTEM
 
-The Hotel Management System is a modern web application built with **Spring Boot**, **JPA (Hibernate)**, and **PostgreSQL**. It enables hotel staff to manage room bookings, track real-time room availability, and handle customer records efficiently. The system features a clean REST API backend and a user-friendly HTML/JavaScript frontend.
+A simple hotel booking system with a **Spring Boot** backend and an **Angular 17** frontend.
 
-It allows users to book rooms, view all bookings, check room availability, and delete bookings—all through an intuitive web interface.
+- Backend exposes REST APIs for bookings and availability
+- Frontend provides a form to create bookings, list bookings, view availability, and delete bookings
 
 ---
 
@@ -19,12 +20,10 @@ It allows users to book rooms, view all bookings, check room availability, and d
 
 # TECHNOLOGIES USED
 
-- **Java 17+**: Core backend logic and REST API.
-- **Spring Boot 3.2+**: Rapid application development and RESTful services.
-- **Spring Data JPA (Hibernate)**: ORM for database persistence.
-- **PostgreSQL 15+**: Relational database for storing bookings.
-- **HTML, CSS, JavaScript**: Frontend user interface.
-- **Maven**: Build automation and dependency management.
+- **Java 17+**, **Spring Boot 3.2+**, **Spring Data JPA (Hibernate)**
+- **PostgreSQL** (prod) and **H2** (in-memory, optional for quick dev)
+- **Angular 17**, **Angular CLI**, **TypeScript**
+- **Maven**
 
 ---
 
@@ -54,9 +53,9 @@ This project uses the following Maven dependencies (see `pom.xml`):
 
 ---
 
-# SPRING BOOT CONFIGURATION
+## Backend configuration
 
-See `src/main/resources/application.properties`:
+`src/main/resources/application.properties` is set for PostgreSQL:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/hotel_db
@@ -64,74 +63,92 @@ spring.datasource.username=postgres
 spring.datasource.password=YOUR_PASSWORD
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 server.port=8080
 ```
 
 ---
 
-# 🖥 PREREQUISITES
+## Prerequisites
 
-- Java JDK 17+
-- PostgreSQL 15+
-- Apache Maven 3.8.6+
-- Internet connection (for Maven dependencies)
-- IDE like VS Code / IntelliJ IDEA (recommended)
+- Java 17+
+- Maven
+- Node.js 20 LTS + npm
+- PostgreSQL (if not using H2)
 
 ---
 
-# 🗄 DATABASE SETUP
-
-Create a PostgreSQL database named `hotel_db`:
+## Database setup (PostgreSQL)
 
 ```sql
 CREATE DATABASE hotel_db;
 ```
-
-Spring Boot and JPA will auto-create the necessary tables on first run.
+Update DB credentials in `application.properties`.
 
 ---
 
-# PROJECT STRUCTURE
+## Project structure (key parts)
 
 ```bash
- Hotel
-└── src
-    └── main
-        ├── java
-        │   └── com
-        │       └── example
-        │           └── Hotel
-        │               ├── Booking.java
-        │               ├── BookingController.java
-        │               ├── BookingRepository.java
-        │               ├── BookingService.java
-        │               └── HotelApplication.java
-        └── resources
-            ├── application.properties
-            ├── static
-            │   └── hotel.html
-            └── templates
-                └── index.html
+Hotel Angular/
+├── src/main/java/com/example/Hotel/
+│   ├── Booking.java
+│   ├── BookingController.java
+│   ├── BookingRepository.java
+│   ├── BookingService.java
+│   └── HotelApplication.java
+├── src/main/resources/
+│   └── application.properties
+└── hotel-frontend/
+    ├── angular.json
+    ├── package.json
+    ├── proxy.conf.json
+    └── src/
+        ├── main.ts
+        ├── styles.css
+        └── app/
+            ├── app.component.ts
+            ├── app.routes.ts
+            ├── models/booking.model.ts
+            ├── services/hotel.service.ts
+            └── pages/bookings-page.component.ts
 ```
 
 ---
 
-# HOW TO RUN
+## How to run (Windows PowerShell)
 
-1. **Ensure PostgreSQL is running and the `hotel_db` database exists.**
-2. **Update DB credentials** in `application.properties` if needed.
-3. **Build and run the backend:**
-   ```bash
-   cd Hotel
-   ./mvnw spring-boot:run
-   ```
-4. **Open the frontend:**
-   - Open `Hotel/src/main/resources/static/hotel.html` in your browser.
+1) Install Node.js 20 LTS (if not installed)
+```powershell
+winget install OpenJS.NodeJS.LTS --silent --accept-package-agreements --accept-source-agreements
+```
+
+2) Allow running npm/npx scripts once per user (fixes execution policy error)
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+3) Start the backend (Spring Boot)
+```powershell
+cd "F:\Hotel Angular"
+.\mvnw.cmd spring-boot:run
+```
+
+If port 8080 is in use:
+```powershell
+netstat -ano | findstr :8080
+taskkill /PID <PID_FROM_ABOVE> /F
+```
+
+4) Start the frontend (Angular)
+```powershell
+cd "F:\Hotel Angular\hotel-frontend"
+npm install
+ng serve --open
+```
 
 ---
 
-# API ENDPOINTS
+## API Endpoints
 
 - `POST /api/hotel_db/bookings` — Book rooms (JSON: customerName, contact, roomType, count)
 - `GET /api/hotel_db/bookings` — List all bookings
@@ -140,14 +157,6 @@ Spring Boot and JPA will auto-create the necessary tables on first run.
 
 ---
 
-# CONTACT
+## Screenshot
 
-- **Developer:** *Venkatesh Soma*
-- **Email:** venkateshsoma2305@gmail.com
-- **GitHub:** *venkatesh-soma* 
-
----
-
-# SCREENSHOT
-
-![](Hotel.png) 
+![](Hotel.png)
