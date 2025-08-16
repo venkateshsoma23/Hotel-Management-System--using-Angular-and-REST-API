@@ -166,11 +166,6 @@ ng serve --open
 - `GET /api/hotel_db/rooms/availability?type=AC|Non-AC` — Get room availability
 
 ---
-
-## Screenshot
-
-<<<<<<< HEAD
-![](Hotel.png)
 =======
 - **Developer:** *Venkatesh Soma*
 - **Email:** venkateshsoma2305@gmail.com
@@ -181,4 +176,4 @@ ng serve --open
 # SCREENSHOT
 
 ![](Hotel.png) 
->>>>>>> 87e0fb1b69910f7cd18c44f52eaae5a63732e524
+
