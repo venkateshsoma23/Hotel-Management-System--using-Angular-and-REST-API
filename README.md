@@ -68,11 +68,7 @@ server.port=8080
 
 ---
 
-<<<<<<< HEAD
-## Prerequisites
-=======
 # PREREQUISITES
->>>>>>> 87e0fb1b69910f7cd18c44f52eaae5a63732e524
 
 - Java 17+
 - Maven
@@ -81,13 +77,9 @@ server.port=8080
 
 ---
 
-<<<<<<< HEAD
-## Database setup (PostgreSQL)
-=======
 # DATABASE SETUP
 
 Create a PostgreSQL database named `hotel_db`:
->>>>>>> 87e0fb1b69910f7cd18c44f52eaae5a63732e524
 
 ```sql
 CREATE DATABASE hotel_db;
@@ -143,12 +135,6 @@ cd "F:\Hotel Angular"
 .\mvnw.cmd spring-boot:run
 ```
 
-If port 8080 is in use:
-```powershell
-netstat -ano | findstr :8080
-taskkill /PID <PID_FROM_ABOVE> /F
-```
-
 4) Start the frontend (Angular)
 ```powershell
 cd "F:\Hotel Angular\hotel-frontend"
@@ -166,7 +152,8 @@ ng serve --open
 - `GET /api/hotel_db/rooms/availability?type=AC|Non-AC` — Get room availability
 
 ---
-=======
+# CONTACT
+
 - **Developer:** *Venkatesh Soma*
 - **Email:** venkateshsoma2305@gmail.com
 - **GitHub:** *venkatesh-soma* 
